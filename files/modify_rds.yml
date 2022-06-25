@@ -1,0 +1,19 @@
+- name: create-rds-intance
+  hosts: database
+  connection: local
+  gather_facts : false
+
+  tasks:
+
+    - name: script run
+      ansible.builtin.script: /home/sunny/Projects/terraform/ansible_aws/script.sh
+      register: command_output
+
+    - set_fact:
+        test1: "{{ command_output.stdout | trim }}"
+
+    - name: Get information about an instance
+      community.aws.rds_instance:
+        db_instance_identifier: education
+        engine_version: "{{ test1 }}"
+        apply_immediately: yes

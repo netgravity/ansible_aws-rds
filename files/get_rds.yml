@@ -1,0 +1,27 @@
+- name: create-rds-intance
+  hosts: "{{ variable_host }}"
+  connection: local
+  gather_facts : false
+
+  environment:
+    AWS_ACCESS_KEY_ID: "{{ aws_access_key }}"
+    AWS_SECRET_ACCESS_KEY: "{{ aws_secret_key }}"
+    AWS_REGION: "{{ aws_region }}"
+ 
+  tasks:
+    - name: Get information about an instance
+      community.aws.rds_instance_info:
+        db_instance_identifier: education
+      register: new_database_info
+    - name: Print variable
+      debug:
+        msg: "{{ new_database_info | json_query('instances[*].
+              {engine: engine, version: engine_version,
+              db_name: db_instance_identifier, storage: allocated_storage
+              option_group: option_group_memberships
+              param_group: db_parameter_groups}') }}"
+    - name: Print return information from the previous task , type -vv
+      ansible.builtin.debug:
+        var: new_database_info
+        verbosity: 2
+

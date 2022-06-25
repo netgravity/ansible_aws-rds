@@ -1,0 +1,47 @@
+## Usage
+sunny@debby:terraform$ ansible-playbook test4.yml -i hosts
+
+PLAY [create-rds-intance] ******************************************************************************************************************************************************
+
+TASK [Get information about an instance] ***************************************************************************************************************************************
+ok: [education.cwzslowksnmn.us-east-2.rds.amazonaws.com]
+
+TASK [Print variable] **********************************************************************************************************************************************************
+ok: [education.cwzslowksnmn.us-east-2.rds.amazonaws.com] => {
+    "msg": [
+        {
+            "db_name": "education",
+            "engine": "postgres",
+            "option_group": [
+                {
+                    "option_group_name": "default:postgres-13",
+                    "status": "in-sync"
+                }
+            ],
+            "param_group": [
+                {
+                    "db_parameter_group_name": "education",
+                    "parameter_apply_status": "in-sync"
+                }
+            ],
+            "storage": 5,
+            "version": "13.3"
+        }
+    ]
+}
+
+TASK [Print return information from the previous task , type -vv] **************************************************************************************************************
+skipping: [education.cwzslowksnmn.us-east-2.rds.amazonaws.com]
+
+PLAY RECAP *********************************************************************************************************************************************************************
+education.cwzslowksnmn.us-east-2.rds.amazonaws.com : ok=2    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0   
+
+### To get the full output run the ansible playbook with -vv flag .
+https://medium.com/@tomwwright/automating-with-ansible-building-a-vpc-c252944d3d2e
+# follow above and setup hosts and vars
+#
+./get_rds_version.sh education
+##
+#Run ansible playbook to get rds info
+#ansible-playbook get_rds.yml -i hosts --vault-password-file ~/.ansibled.vault
+#

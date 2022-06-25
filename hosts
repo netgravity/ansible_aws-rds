@@ -1,0 +1,8 @@
+#[database]
+#education.cwzslowksnmn.us-east-2.rds.amazonaws.com
+
+[db]
+db.ansibled
+
+[project.ansibled:children]
+db
