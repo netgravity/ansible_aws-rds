@@ -16,7 +16,7 @@
     - name: Print variable
       debug:
         msg: "{{ new_database_info | json_query('instances[*].
-              {engine: engine, version: engine_version,
+        {engine: engine, version: engine_version, db_status: db_instance_status
               db_name: db_instance_identifier, storage: allocated_storage
               option_group: option_group_memberships
               param_group: db_parameter_groups}') }}"

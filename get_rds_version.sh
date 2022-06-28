@@ -58,7 +58,7 @@ upgrade_rds_db(){
 		echo    # (optional) move to a new line
 		if [[ $REPLY =~ ^[Yy][Ee][Ss]$ ]]
 		then
-			ansible-playbook upgrade_rds.yml -i hosts --extra-vars "variable_host=$ansiblehost \
+			ansible-playbook ./files/upgrade_rds.yml -i hosts --extra-vars "variable_host=$ansiblehost \
 			new_version=$latestminorver db_instance_id=$db_tobe_upgraded" --vault-password-file ~/.ansibled.vault
 		else
 			 echo "All good will not upgrade"
@@ -68,13 +68,13 @@ upgrade_rds_db(){
 
 get_rds_info(){
 
-	ansible-playbook get_rds.yml -i hosts --extra-vars "variable_host=$ansiblehost" --vault-password-file ~/.ansibled.vault
+	ansible-playbook ./files/get_rds.yml -i hosts --extra-vars "variable_host=$ansiblehost"  --vault-password-file ~/.ansibled.vault
 	
               }
 
 create_rds_snapshot(){
 
-	ansible-playbook createsnapshot.yml -i hosts --extra-vars "variable_host=$ansiblehost  db_instance_id=$db_tobe_upgraded" --vault-password-file ~/.ansibled.vault
+	ansible-playbook ./files/createsnapshot.yml -i hosts --extra-vars "variable_host=$ansiblehost  db_instance_id=$db_tobe_upgraded" --vault-password-file ~/.ansibled.vault
 	
               }
 
@@ -90,10 +90,19 @@ get_rds_info
 
 # take a backup
 create_rds_snapshot
+if [ $? -eq 0 ] 
+then 
+	  echo "Snapshot creation worked" 
+  else 
+	   echo "snapshot creation failed" ; exit 1
+fi
 
+
+echo $?
+echo "after step createsnaphot"
 
 # invoke upgade rds 
-upgrade_rds_db
+#upgrade_rds_db
 
 
 
