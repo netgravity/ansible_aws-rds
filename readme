@@ -45,3 +45,9 @@ https://medium.com/@tomwwright/automating-with-ansible-building-a-vpc-c252944d3d
 #Run ansible playbook to get rds info
 #ansible-playbook get_rds.yml -i hosts --vault-password-file ~/.ansibled.vault
 #
+create_rds_snapshot(){
+
+ansible-playbook ./files/createsnapshot.yml -i hosts --extra-vars "variable_host=$ansiblehost  db_instance_id=$db_tobe_upgraded" --vault-password-file ~/.ansibled.vault
+
+## Run single playbook with just one task, below example is for only snapshot creation
+ansible-playbook files/get_rds.yml -i hosts --extra-vars "variable_host=db  db_instance_id=education" --tags create-snapshot --vault-password-file ~/.ansibled.vault

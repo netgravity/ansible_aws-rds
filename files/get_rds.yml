@@ -25,3 +25,11 @@
         var: new_database_info
         verbosity: 2
 
+    - name: Create snapshot
+      community.aws.rds_instance_snapshot:
+        db_instance_identifier: "{{ db_instance_id }}"
+        db_snapshot_identifier: "{{ db_instance_id }}-preupgrade"
+      tags:
+        - create-snapshot
+
+
