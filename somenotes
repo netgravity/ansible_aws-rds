@@ -1,0 +1,26 @@
+run bash and pass arg
+
+arg in case statement , will assign a profile , eg. test-teampass will set profile itnnprd
+
+ansible will run script with passing itnonprd.awsaccount and for region 
+
+so rather thhen running shell script to set keys , run ansible script to output json file
+
+
+example
+sunny@debby:ansible_aws$ cat inifile.ini 
+[itnonprd]
+awsaccount=12345678
+awsregion=sydney
+
+ - name: Setting host facts using key=value pairs, this format can only create strings or booleans
+      ansible.builtin.set_fact: one_fact="something" other_fact="{{ lookup('ini', 'awsaccount', section='itnonprd', file='inifile.ini')  }}"
+    - debug: msg="{{ other_fact }}"
+
+    - name: test set facts from ini file
+      shell:
+        'echo "aswaccount from ini file is {{ other_fact }}"'
+      register: inifileinfo
+
+    - debug: msg="{{inifileinfo.stdout}}"
+

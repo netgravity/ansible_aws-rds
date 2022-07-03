@@ -1,0 +1,4 @@
+---
+kind: Deployment
+metadata:
+  name: pr1-dep

@@ -1,0 +1,44 @@
+---
+  - name: Shell Examples
+    hosts: localhost
+    vars:
+      - awsaccount: abcd
+
+    tasks:
+    - set_fact:
+        objs: "{{ objs|d({})|combine({_key: _val}) }}"
+      loop: "{{ query('varnames', 'objs_') }}"
+      vars:
+        _obj: "{{ lookup('vars', item) }}"
+        _key: "{{ _obj.kind }}"
+        _val: "{{ _obj.metadata.name }}"
+
+    - name: Check Date with Shell command
+      shell:
+         'echo "my aws account is {{ awsaccount }}"'
+      register: datecmd
+      tags: datecmd
+
+    - debug: msg="{{datecmd.stdout}}"
+    - debug: msg="awsaccount info is{{awsaccount}}"
+
+    - include_vars:
+        file: "{{ item }}"
+        name: "objs_{{ item|splitext|first }}"
+      register: result
+      loop:
+        - deployment.yml
+          
+    - debug: msg="User in integration is {{ lookup('ini', 'awsaccount', section='itnonprd', file='inifile.ini') }}"
+    
+    - name: Setting host facts using key=value pairs, this format can only create strings or booleans
+      ansible.builtin.set_fact: one_fact="{{ lookup('ini', 'awsregion', section='itnonprd', file='inifile.ini')  }}" other_fact="{{ lookup('ini', 'awsaccount', section='itnonprd', file='inifile.ini')  }}"
+    - debug: msg="{{ one_fact }}"
+    - debug: msg="{{ other_fact }}"
+
+    - name: test set facts from ini file
+      shell:
+        'echo "aswaccount from ini file is {{ other_fact }}"'
+      register: inifileinfo
+
+    - debug: msg="{{inifileinfo.stdout}}"
